@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.solo.subway.util.HttpUtil;
 import com.solo.subway.util.Station;
+import com.solo.subway.util.SubwayLine;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -26,7 +27,7 @@ public class SubwayInfoParser {
     private static SubwayInfoParser instance = new SubwayInfoParser();
     private static Logger logger = LoggerFactory.getLogger(SubwayInfoParser.class);
 
-    private Map<String, String> lineName = new HashMap<String, String>();
+    private Map<String, SubwayLine> lineName = new HashMap<String, SubwayLine>();
     private Map<String, Station> stations = new HashMap<String, Station>();
     private SubwayInfoParser(){}
 
@@ -44,16 +45,24 @@ public class SubwayInfoParser {
         while (iterator.hasNext()) {
             Map<String, Object> line = (Map<String, Object>) iterator.next();
             logger.info("handle line " + line);
-            lineName.put(line.get("ls").toString(), line.get("ln").toString());
+            SubwayLine subwayLine = new SubwayLine();
+            subwayLine.setId(line.get("ls").toString());
+            subwayLine.setName(line.get("ln").toString());
+            if (line.get("lo").equals("1")) {
+                subwayLine.setCircle(true);
+            } else {
+                subwayLine.setCircle(false);
+            }
+            lineName.put(line.get("ls").toString(), subwayLine);
 
             JSONArray lineStations = (JSONArray) line.get("st");
-            parseStation(lineStations);
+            parseStation(lineStations, subwayLine.isCircle());
         }
 
         for (Station station : stations.values()) {
             logger.info(station.getName());
             for (String line : station.getLines()) {
-                logger.info(station.getName() + " in " + lineName.get(line));
+                logger.info(station.getName() + " in " + lineName.get(line).getName());
             }
             for (String next : station.getNextStations()) {
                 logger.info(station.getName() + " next to " + stations.get(next).getName());
@@ -61,8 +70,9 @@ public class SubwayInfoParser {
         }
     }
 
-    private void parseStation(JSONArray lineStations) {
+    private void parseStation(JSONArray lineStations, boolean isCircleLine) {
         Iterator iterator = lineStations.iterator();
+        Station head = null;
         Station previous = null;
         while (iterator.hasNext()) {
             Map<String, String> station = (Map<String, String>) iterator.next();
@@ -86,8 +96,16 @@ public class SubwayInfoParser {
 
             stations.put(station1.getId(), station1);
 
+            if (head == null) {
+                head = station1;
+            }
+
             previous = station1;
 
+        }
+        if (head != null && previous != null) {
+            previous.addStation(head.getId());
+            head.addStation(previous.getId());
         }
     }
 
