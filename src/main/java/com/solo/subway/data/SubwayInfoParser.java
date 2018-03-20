@@ -2,6 +2,7 @@ package com.solo.subway.data;
 
 
 import com.alibaba.fastjson.JSON;
+import com.solo.subway.util.HttpUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -14,29 +15,22 @@ import java.util.Map;
 
 public class SubwayInfoParser {
     private static String url = "http://map.amap.com/service/subway?_1469083453978&srhdata=1100_drw_beijing.json";
+    private static SubwayInfoParser instance = new SubwayInfoParser();
+    private SubwayInfoParser(){}
 
-    public static void parse() throws IOException {
-        String result = httpGet();
+    public static SubwayInfoParser getInstace() {
+        return instance;
+    }
+
+    public void parse() throws IOException {
+        String result = HttpUtil.httpGet(url);
         System.out.println(result);
         Map<String, Object> json = (Map<String, Object>) JSON.parse(result);
 
         System.out.println(json);
     }
 
-
-    private static String httpGet() throws IOException {
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet httpGet = new HttpGet(url);
-        HttpResponse httpResponse=httpClient.execute(httpGet);
-        int status = httpResponse.getStatusLine().getStatusCode();
-        if (status == 200) {
-            String result = EntityUtils.toString(httpResponse.getEntity());
-            return result;
-        }
-        return null;
-    }
-
     public static void main(String args[]) throws IOException {
-        parse();
+        SubwayInfoParser.getInstace().parse();
     }
 }
