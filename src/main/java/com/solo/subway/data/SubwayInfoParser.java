@@ -49,6 +49,16 @@ public class SubwayInfoParser {
             JSONArray lineStations = (JSONArray) line.get("st");
             parseStation(lineStations);
         }
+
+        for (Station station : stations.values()) {
+            logger.info(station.getName());
+            for (String line : station.getLines()) {
+                logger.info(station.getName() + " in " + lineName.get(line));
+            }
+            for (String next : station.getNextStations()) {
+                logger.info(station.getName() + " next to " + stations.get(next).getName());
+            }
+        }
     }
 
     private void parseStation(JSONArray lineStations) {
@@ -57,12 +67,15 @@ public class SubwayInfoParser {
         while (iterator.hasNext()) {
             Map<String, String> station = (Map<String, String>) iterator.next();
             logger.info("handle station " + station);
-            Station station1 = new Station();
+            Station station1 = stations.get(station.get("poiid"));
+            if (station1 == null) {
+                station1 = new Station();
+            }
             station1.setId(station.get("poiid"));
             station1.setName(station.get("n"));
             station1.setPinyin(station.get("sp"));
             station1.setPosition(station.get("sl"));
-            String[] staionLines = station.get("r").split("|");
+            String[] staionLines = station.get("r").split("\\|");
             for (String l : staionLines) {
                 station1.addLine(l);
             }
