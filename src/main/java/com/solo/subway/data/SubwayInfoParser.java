@@ -2,6 +2,7 @@ package com.solo.subway.data;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.solo.subway.util.HttpUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class SubwayInfoParser {
@@ -33,7 +36,13 @@ public class SubwayInfoParser {
         logger.info(result);
         Map<String, Object> json = (Map<String, Object>) JSON.parse(result);
 
-        System.out.println(json.get("l"));
+        JSONArray lines = (JSONArray) json.get("l");
+        Iterator iterator = lines.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> line = (Map<String, Object>) iterator.next();
+            lineName.put(line.get("ls").toString(), line.get("ln").toString());
+        }
+        System.out.println(lineName);
     }
 
     public static void main(String args[]) throws IOException {
