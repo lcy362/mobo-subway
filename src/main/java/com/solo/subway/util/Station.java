@@ -13,4 +13,13 @@ public class Station {
     private String position;
     private String pinyin;
     private Set<String> nextStations = new HashSet<String>();
+
+    public void addLine(String line) {
+        lines.add(line);
+    }
+
+    public void addStation(String station) {
+        nextStations.add(station);
+    }
+
 }
