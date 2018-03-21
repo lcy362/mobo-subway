@@ -45,13 +45,9 @@ public class SubwayInfoParser {
 
         if (MapUtils.isEmpty(lineName) || MapUtils.isEmpty(stations)) {
             logger.info("init data from web");
-            Map<String, SubwayLine> webLine = new HashMap<>();
-            Map<String, Station> webStation = new HashMap<>();
-            loadFromUrl(webLine, webStation);
-            lineName.putAll(webLine);
-            stations.putAll(webStation);
-            mapdb.save(LINE_TAG, webLine);
-            mapdb.save(STATION_TAG, webStation);
+            loadFromUrl();
+            mapdb.save(LINE_TAG, lineName);
+            mapdb.save(STATION_TAG, stations);
         }
 
         for (Station station : stations.values()) {
@@ -67,7 +63,7 @@ public class SubwayInfoParser {
         store.close();
     }
 
-    private void loadFromUrl(Map<String, SubwayLine> webLine, Map<String, Station> webStation) throws IOException {
+    private void loadFromUrl() throws IOException {
         String result = HttpUtil.httpGet(url);
         logger.debug("http info " + result);
         Map<String, Object> json = (Map<String, Object>) JSON.parse(result);
@@ -85,21 +81,21 @@ public class SubwayInfoParser {
             } else {
                 subwayLine.setCircle(false);
             }
-            webLine.put(line.get("ls").toString(), subwayLine);
+            lineName.put(line.get("ls").toString(), subwayLine);
 
             JSONArray lineStations = (JSONArray) line.get("st");
-            parseStation(lineStations, webStation, subwayLine.isCircle());
+            parseStation(lineStations, subwayLine.isCircle());
         }
     }
 
-    private void parseStation(JSONArray lineStations, Map<String, Station> webStation, boolean isCircleLine) {
+    private void parseStation(JSONArray lineStations, boolean isCircleLine) {
         Iterator iterator = lineStations.iterator();
         Station head = null;
         Station previous = null;
         while (iterator.hasNext()) {
             Map<String, String> station = (Map<String, String>) iterator.next();
             logger.info("handle station " + station);
-            Station station1 = webStation.get(station.get("poiid"));
+            Station station1 = stations.get(station.get("poiid"));
 
             if (station1 == null) {
                 station1 = new Station();
@@ -117,7 +113,7 @@ public class SubwayInfoParser {
                 station1.addStation(previous.getId());
             }
 
-            webStation.put(station1.getId(), station1);
+            stations.put(station1.getId(), station1);
 
             if (head == null) {
                 head = station1;

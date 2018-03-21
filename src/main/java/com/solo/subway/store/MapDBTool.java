@@ -21,7 +21,7 @@ public class MapDBTool {
 
     public <T> Map<String, T> load(String name) {
         if (!store.exists(name)) {
-            return Collections.emptyMap();
+            return new HashMap<>();
         }
 
         Map<String, T> savedData = store.hashMap(name, Serializer.STRING, Serializer.JAVA).open();
