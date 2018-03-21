@@ -2,11 +2,12 @@ package com.solo.subway.util;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-public class Station {
+public class Station implements Serializable{
     private String id;
     private String name;
     private Set<String> lines = new HashSet<String>();

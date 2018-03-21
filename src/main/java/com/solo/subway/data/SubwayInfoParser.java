@@ -6,18 +6,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.solo.subway.util.HttpUtil;
 import com.solo.subway.util.Station;
 import com.solo.subway.util.SubwayLine;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,9 +19,10 @@ public class SubwayInfoParser {
     private static SubwayInfoParser instance = new SubwayInfoParser();
     private static Logger logger = LoggerFactory.getLogger(SubwayInfoParser.class);
 
-    private Map<String, SubwayLine> lineName = new HashMap<String, SubwayLine>();
-    private Map<String, Station> stations = new HashMap<String, Station>();
-    private SubwayInfoParser(){}
+    private Map<String, SubwayLine> lineName = new HashMap<>();
+    private Map<String, Station> stations = new HashMap<>();
+    private SubwayInfoParser(){
+    }
 
     public static SubwayInfoParser getInstace() {
         return instance;
@@ -78,6 +71,7 @@ public class SubwayInfoParser {
             Map<String, String> station = (Map<String, String>) iterator.next();
             logger.info("handle station " + station);
             Station station1 = stations.get(station.get("poiid"));
+
             if (station1 == null) {
                 station1 = new Station();
             }
