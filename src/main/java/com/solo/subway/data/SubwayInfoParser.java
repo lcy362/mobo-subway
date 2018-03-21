@@ -3,9 +3,13 @@ package com.solo.subway.data;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.solo.subway.store.MapDBTool;
 import com.solo.subway.util.HttpUtil;
 import com.solo.subway.util.Station;
 import com.solo.subway.util.SubwayLine;
+import org.apache.commons.collections4.MapUtils;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +22,11 @@ public class SubwayInfoParser {
     private static String url = "http://map.amap.com/service/subway?_1469083453978&srhdata=1100_drw_beijing.json";
     private static SubwayInfoParser instance = new SubwayInfoParser();
     private static Logger logger = LoggerFactory.getLogger(SubwayInfoParser.class);
+    private static final String LINE_TAG = "line";
+    private static final String STATION_TAG = "station";
 
-    private Map<String, SubwayLine> lineName = new HashMap<>();
-    private Map<String, Station> stations = new HashMap<>();
+    private Map<String, SubwayLine> lineName;
+    private Map<String, Station> stations;
     private SubwayInfoParser(){
     }
 
@@ -29,27 +35,23 @@ public class SubwayInfoParser {
     }
 
     public void parse() throws IOException {
-        String result = HttpUtil.httpGet(url);
-        logger.info("http info " + result);
-        Map<String, Object> json = (Map<String, Object>) JSON.parse(result);
+        DB store = DBMaker.fileDB("file.db").make();
+        MapDBTool mapdb = new MapDBTool(store);
 
-        JSONArray lines = (JSONArray) json.get("l");
-        Iterator iterator = lines.iterator();
-        while (iterator.hasNext()) {
-            Map<String, Object> line = (Map<String, Object>) iterator.next();
-            logger.info("handle line " + line);
-            SubwayLine subwayLine = new SubwayLine();
-            subwayLine.setId(line.get("ls").toString());
-            subwayLine.setName(line.get("ln").toString());
-            if (line.get("lo").equals("1")) {
-                subwayLine.setCircle(true);
-            } else {
-                subwayLine.setCircle(false);
-            }
-            lineName.put(line.get("ls").toString(), subwayLine);
+        lineName = mapdb.load(LINE_TAG);
+        stations = mapdb.load(STATION_TAG);
 
-            JSONArray lineStations = (JSONArray) line.get("st");
-            parseStation(lineStations, subwayLine.isCircle());
+        logger.info("load from mapdb " + lineName.size() + " " + stations.size());
+
+        if (MapUtils.isEmpty(lineName) || MapUtils.isEmpty(stations)) {
+            logger.info("init data from web");
+            Map<String, SubwayLine> webLine = new HashMap<>();
+            Map<String, Station> webStation = new HashMap<>();
+            loadFromUrl(webLine, webStation);
+            lineName.putAll(webLine);
+            stations.putAll(webStation);
+            mapdb.save(LINE_TAG, webLine);
+            mapdb.save(STATION_TAG, webStation);
         }
 
         for (Station station : stations.values()) {
@@ -61,16 +63,43 @@ public class SubwayInfoParser {
                 logger.info(station.getName() + " next to " + stations.get(next).getName());
             }
         }
+
+        store.close();
     }
 
-    private void parseStation(JSONArray lineStations, boolean isCircleLine) {
+    private void loadFromUrl(Map<String, SubwayLine> webLine, Map<String, Station> webStation) throws IOException {
+        String result = HttpUtil.httpGet(url);
+        logger.debug("http info " + result);
+        Map<String, Object> json = (Map<String, Object>) JSON.parse(result);
+
+        JSONArray lines = (JSONArray) json.get("l");
+        Iterator iterator = lines.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> line = (Map<String, Object>) iterator.next();
+            logger.debug("handle subwayline " + line);
+            SubwayLine subwayLine = new SubwayLine();
+            subwayLine.setId(line.get("ls").toString());
+            subwayLine.setName(line.get("ln").toString());
+            if (line.get("lo").equals("1")) {
+                subwayLine.setCircle(true);
+            } else {
+                subwayLine.setCircle(false);
+            }
+            webLine.put(line.get("ls").toString(), subwayLine);
+
+            JSONArray lineStations = (JSONArray) line.get("st");
+            parseStation(lineStations, webStation, subwayLine.isCircle());
+        }
+    }
+
+    private void parseStation(JSONArray lineStations, Map<String, Station> webStation, boolean isCircleLine) {
         Iterator iterator = lineStations.iterator();
         Station head = null;
         Station previous = null;
         while (iterator.hasNext()) {
             Map<String, String> station = (Map<String, String>) iterator.next();
             logger.info("handle station " + station);
-            Station station1 = stations.get(station.get("poiid"));
+            Station station1 = webStation.get(station.get("poiid"));
 
             if (station1 == null) {
                 station1 = new Station();
@@ -88,7 +117,7 @@ public class SubwayInfoParser {
                 station1.addStation(previous.getId());
             }
 
-            stations.put(station1.getId(), station1);
+            webStation.put(station1.getId(), station1);
 
             if (head == null) {
                 head = station1;
