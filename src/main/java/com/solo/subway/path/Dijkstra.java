@@ -11,7 +11,8 @@ import java.util.Map;
 
 public class Dijkstra {
     static Logger logger = LoggerFactory.getLogger(Dijkstra.class);
-    public static void pathToAll(String originName, Map<String, Station> stations) {
+    private static final int MAX = 20000;
+    public static Map<String, PathInfo> pathToAll(String originName, Map<String, Station> stations) {
         String originId = null;
         Map<String, PathInfo> knownPath = new HashMap<>();
         Map<String, PathInfo> waitingPath = new HashMap<>();
@@ -24,7 +25,7 @@ public class Dijkstra {
                 path.addNodeToPath(originId);
                 knownPath.put(originId, path);
             } else {
-                path.setLength(Integer.MAX_VALUE);
+                path.setLength(MAX);
                 path.setStationId(station.getId());
                 waitingPath.put(station.getId(), path);
             }
@@ -64,6 +65,8 @@ public class Dijkstra {
             }
 
         }
+
+        return knownPath;
 
     }
 }

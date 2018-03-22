@@ -112,7 +112,7 @@ public class SubwayInfoParser {
             previous = station1;
 
         }
-        if (head != null && previous != null) {
+        if (isCircleLine && head != null && previous != null) {
             previous.addStation(head.getId());
             head.addStation(previous.getId());
         }
