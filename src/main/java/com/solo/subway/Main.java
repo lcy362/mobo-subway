@@ -2,6 +2,7 @@ package com.solo.subway;
 
 import com.solo.subway.data.SubwayInfoParser;
 import com.solo.subway.path.Dijkstra;
+import com.solo.subway.util.PathInfo;
 import com.solo.subway.util.Station;
 import com.solo.subway.util.SubwayLine;
 import org.slf4j.Logger;
@@ -28,7 +29,17 @@ public class Main {
             }
         }
 
-        Dijkstra.pathToAll("奥林匹克公园", stations);
+        Map<String, PathInfo> aolin = Dijkstra.pathToAll("奥林匹克公园", stations);
+        Map<String, PathInfo> tian = Dijkstra.pathToAll("天安门东", stations);
+        for (Station station : stations.values()) {
+            PathInfo aolinPath = aolin.get(station.getId());
+            PathInfo tianPath = tian.get(station.getId());
+            if (aolinPath.getLength() < 15 && tianPath.getLength() < 7) {
+                System.out.println(station.getName() + " " + aolinPath.getLength() + "," + aolinPath.getTransferNum()
+                + "," + tianPath.getLength() + "," + tianPath.getTransferNum());
+            }
+        }
 
     }
 }
+
