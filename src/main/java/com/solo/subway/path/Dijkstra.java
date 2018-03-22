@@ -2,12 +2,11 @@ package com.solo.subway.path;
 
 import com.solo.subway.util.PathInfo;
 import com.solo.subway.util.Station;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Dijkstra {
     static Logger logger = LoggerFactory.getLogger(Dijkstra.class);
@@ -44,7 +43,7 @@ public class Dijkstra {
                 if (nextPath.getLength() > nextLength) {
                     nextPath.setLength(nextLength);
                     logger.info("set " + stations.get(nextId).getName() + " distance to " + nextLength);
-                    nextPath.setDetail(now.getDetail());
+                    nextPath.setDetail(new ArrayList<>(now.getDetail()));
                     nextPath.addNodeToPath(nextId);
                 }
             }
@@ -66,7 +65,34 @@ public class Dijkstra {
 
         }
 
+        for (PathInfo pathInfo : knownPath.values()) {
+            if (pathInfo.getLength() >= MAX) {
+                pathInfo.setTransferNum(-1);
+                continue;
+            }
+            int transfer = 0;
+            List<String> detail = pathInfo.getDetail();
+
+            for (int i = 1; i < detail.size() - 1; i++) {
+                Station pre = stations.get(detail.get(i - 1));
+                Station next = stations.get(detail.get(i + 1));
+                if (transferd(pre.getLines(), next.getLines())) {
+                    transfer++;
+                }
+            }
+            pathInfo.setTransferNum(transfer);
+            logger.info(originName + " to " + stations.get(pathInfo.getStationId()).getName()
+             + " transfer " + transfer);
+        }
+
         return knownPath;
 
+    }
+
+    private static boolean transferd(Set<String> line1, Set<String> line2) {
+        Set<String> union = new HashSet<>();
+        union.addAll(line1);
+        union.addAll(line2);
+        return  !(union.size() < line1.size() + line2.size());
     }
 }

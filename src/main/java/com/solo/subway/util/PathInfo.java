@@ -9,6 +9,7 @@ import java.util.List;
 public class PathInfo {
     private String stationId;
     private int length;
+    private int transferNum;
     private List<String> detail = new ArrayList<>();
 
     public void addNodeToPath(String id) {
