@@ -50,16 +50,6 @@ public class SubwayInfoParser {
             mapdb.save(STATION_TAG, stations);
         }
 
-        for (Station station : stations.values()) {
-            logger.info(station.getName());
-            for (String line : station.getLines()) {
-                logger.info(station.getName() + " in " + lineName.get(line).getName());
-            }
-            for (String next : station.getNextStations()) {
-                logger.info(station.getName() + " next to " + stations.get(next).getName());
-            }
-        }
-
         store.close();
     }
 
@@ -128,7 +118,11 @@ public class SubwayInfoParser {
         }
     }
 
-    public static void main(String args[]) throws IOException {
-        SubwayInfoParser.getInstace().parse();
+    public Map<String, SubwayLine> getLineName() {
+        return lineName;
+    }
+
+    public Map<String, Station> getStations() {
+        return stations;
     }
 }
