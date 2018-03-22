@@ -1,6 +1,7 @@
 package com.solo.subway;
 
 import com.solo.subway.data.SubwayInfoParser;
+import com.solo.subway.path.Dijkstra;
 import com.solo.subway.util.Station;
 import com.solo.subway.util.SubwayLine;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ public class Main {
                 logger.info(station.getName() + " next to " + stations.get(next).getName());
             }
         }
+
+        Dijkstra.pathToAll("奥林匹克公园", stations);
 
     }
 }
