@@ -80,7 +80,7 @@ public class Dijkstra {
             for (int i = 1; i < detail.size() - 1; i++) {
                 Station pre = stations.get(detail.get(i - 1));
                 Station next = stations.get(detail.get(i + 1));
-                if (transferd(pre.getLines(), next.getLines())) {
+                if (transferd(stations.get(pathInfo.getStationId()).getLines(), pre.getLines(), next.getLines())) {
                     transfer++;
                 }
             }
@@ -95,14 +95,15 @@ public class Dijkstra {
 
     /**
      * 输入两个站点的所在线路，判断是否换乘过
-     * @param line1
-     * @param line2
-     * @return
      */
-    private static boolean transferd(Set<String> line1, Set<String> line2) {
+    private static boolean transferd(Set<String> currentLine, Set<String> previous, Set<String> next) {
         Set<String> union = new HashSet<>();
-        union.addAll(line1);
-        union.addAll(line2);
-        return  !(union.size() < line1.size() + line2.size());
+        union.addAll(previous);
+        union.addAll(next);
+        if (union.size() == previous.size() + next.size()) {
+            return true;
+        }
+        previous.removeAll(next);
+        return !(CollectionUtils.containsAny(currentLine, previous));
     }
 }
