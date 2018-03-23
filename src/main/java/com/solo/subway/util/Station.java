@@ -10,10 +10,10 @@ import java.util.Set;
 public class Station implements Serializable{
     private String id;
     private String name;
-    private Set<String> lines = new HashSet<String>();
+    private Set<String> lines = new HashSet<String>(); //所在线路
     private String position;
     private String pinyin;
-    private Set<String> nextStations = new HashSet<String>();
+    private Set<String> nextStations = new HashSet<String>(); //相邻站点
 
     public void addLine(String line) {
         lines.add(line);

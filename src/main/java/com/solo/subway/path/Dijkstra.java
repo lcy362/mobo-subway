@@ -33,6 +33,7 @@ public class Dijkstra {
 
         PathInfo now = knownPath.get(originId);
         while (now != null) {
+            //从起点开始处理
             Station currentStation = stations.get(now.getStationId());
             int nextLength = now.getLength() + 1;
             for (String nextId : currentStation.getNextStations()) {
@@ -40,6 +41,7 @@ public class Dijkstra {
                     continue;
                 }
                 PathInfo nextPath = waitingPath.get(nextId);
+                //更新相邻站点的最短距离
                 if (nextPath.getLength() > nextLength) {
                     nextPath.setLength(nextLength);
                     logger.info("set " + stations.get(nextId).getName() + " distance to " + nextLength);
@@ -48,6 +50,7 @@ public class Dijkstra {
                 }
             }
             now = null;
+            //选出离当前站点距离最小的站，作为下一个要处理的站点
             for (PathInfo pathInfo : waitingPath.values()) {
                 if (now == null) {
                     now = pathInfo;
@@ -65,6 +68,7 @@ public class Dijkstra {
 
         }
 
+        //一次计算换乘信息
         for (PathInfo pathInfo : knownPath.values()) {
             if (pathInfo.getLength() >= MAX) {
                 pathInfo.setTransferNum(-1);
@@ -89,6 +93,12 @@ public class Dijkstra {
 
     }
 
+    /**
+     * 输入两个站点的所在线路，判断是否换乘过
+     * @param line1
+     * @param line2
+     * @return
+     */
     private static boolean transferd(Set<String> line1, Set<String> line2) {
         Set<String> union = new HashSet<>();
         union.addAll(line1);

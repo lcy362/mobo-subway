@@ -8,5 +8,5 @@ import java.io.Serializable;
 public class SubwayLine implements Serializable{
     private String id;
     private String name;
-    private boolean isCircle;
+    private boolean isCircle; //是否环线
 }

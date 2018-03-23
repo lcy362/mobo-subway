@@ -35,6 +35,7 @@ public class SubwayInfoParser {
     }
 
     public void parse() throws IOException {
+        //直接从本地mapdb中获取数据
         DB store = DBMaker.fileDB("file.db").make();
         MapDBTool mapdb = new MapDBTool(store);
 
@@ -45,6 +46,7 @@ public class SubwayInfoParser {
 
         if (MapUtils.isEmpty(lineName) || MapUtils.isEmpty(stations)) {
             logger.info("init data from web");
+            //解析网页数据，并存储到mapdb
             loadFromUrl();
             mapdb.save(LINE_TAG, lineName);
             mapdb.save(STATION_TAG, stations);
