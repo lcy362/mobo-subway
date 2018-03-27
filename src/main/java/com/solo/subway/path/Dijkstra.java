@@ -80,7 +80,7 @@ public class Dijkstra {
             for (int i = 1; i < detail.size() - 1; i++) {
                 Station pre = stations.get(detail.get(i - 1));
                 Station next = stations.get(detail.get(i + 1));
-                if (transferd(stations.get(pathInfo.getStationId()).getLines(), pre.getLines(), next.getLines())) {
+                if (transferd(stations.get(detail.get(i)).getLines(), pre.getLines(), next.getLines())) {
                     transfer++;
                 }
             }
@@ -103,7 +103,8 @@ public class Dijkstra {
         if (union.size() == previous.size() + next.size()) {
             return true;
         }
-        previous.removeAll(next);
-        return !(CollectionUtils.containsAny(currentLine, previous));
+        Collection<String> intersection = CollectionUtils.intersection(previous, next);
+        boolean result = !(CollectionUtils.containsAny(currentLine, intersection));
+        return result;
     }
 }
