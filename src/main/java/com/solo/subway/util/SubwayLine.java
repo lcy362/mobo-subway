@@ -6,7 +6,11 @@ import java.io.Serializable;
 
 @Data
 public class SubwayLine implements Serializable{
+
     private String id;
+
     private String name;
-    private boolean isCircle; //是否环线
+
+    //是否环线
+    private boolean isCircle;
 }
