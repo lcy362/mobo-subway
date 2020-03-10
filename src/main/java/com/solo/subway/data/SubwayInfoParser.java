@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.solo.subway.store.MapDBTool;
 import com.solo.subway.util.HttpUtil;
-import com.solo.subway.util.Station;
-import com.solo.subway.util.SubwayLine;
 import org.apache.commons.collections4.MapUtils;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -14,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 

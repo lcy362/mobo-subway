@@ -1,7 +1,7 @@
 package com.solo.subway.path;
 
 import com.solo.subway.util.PathInfo;
-import com.solo.subway.util.Station;
+import com.solo.subway.data.Station;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

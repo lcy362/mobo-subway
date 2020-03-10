@@ -3,13 +3,11 @@ package com.solo.subway;
 import com.solo.subway.data.SubwayInfoParser;
 import com.solo.subway.path.Dijkstra;
 import com.solo.subway.util.PathInfo;
-import com.solo.subway.util.Station;
-import com.solo.subway.util.SubwayLine;
+import com.solo.subway.data.Station;
+import com.solo.subway.data.SubwayLine;
 import org.junit.Test;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.mapdb.HTreeMap;
-import org.mapdb.Serializer;
 
 import java.io.IOException;
 import java.util.Map;

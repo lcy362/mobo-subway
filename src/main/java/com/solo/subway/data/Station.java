@@ -1,4 +1,4 @@
-package com.solo.subway.util;
+package com.solo.subway.data;
 
 import lombok.Data;
 
