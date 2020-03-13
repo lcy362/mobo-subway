@@ -1,26 +1,28 @@
 package com.solo.subway;
 
-import com.solo.subway.data.SubwayInfoParser;
+import com.solo.subway.data.SubwayDataCollector;
 import com.solo.subway.path.Dijkstra;
+import com.solo.subway.service.spi.SubwayDataService;
 import com.solo.subway.util.PathInfo;
 import com.solo.subway.data.Station;
 import com.solo.subway.data.SubwayLine;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Map;
 
 @Service
 @Slf4j
 public class StationsTransferRunner implements CommandLineRunner {
+
+    @Autowired
+    private SubwayDataService subwayDataService;
+
     @Override
     public void run(String... args) throws Exception {
-        SubwayInfoParser subway = SubwayInfoParser.getInstace();
-        subway.parse();
+        SubwayDataCollector subway = subwayDataService.getSubwayData();
         Map<String, Station> stations = subway.getStations();
         Map<String, SubwayLine> lineName = subway.getLineName();
 

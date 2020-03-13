@@ -14,12 +14,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author licy03
  */
 @SpringBootApplication
-public class JobStarter {
+public class RunnerStarter {
 
     public static void main(String[] args) {
         System.setProperty("org.jboss.logging.provider", "slf4j");
 
-        SpringApplication application = new SpringApplication(JobStarter.class);
+        SpringApplication application = new SpringApplication(RunnerStarter.class);
         application.setWebApplicationType(WebApplicationType.NONE);
         application.run(args);
     }

@@ -1,67 +1,49 @@
-package com.solo.subway.data;
-
+/**
+ * @(#)AMapSubwayDataParser.java, 3月 13, 2020.
+ * <p>
+ * Copyright 2020 fenbi.com. All rights reserved.
+ * FENBI.COM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+package com.solo.subway.parser;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.solo.subway.store.MapDBTool;
+import com.solo.subway.data.Station;
+import com.solo.subway.data.SubwayDataCollector;
+import com.solo.subway.data.SubwayLine;
 import com.solo.subway.util.HttpUtil;
-import org.apache.commons.collections4.MapUtils;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class SubwayInfoParser {
-    private static String url = "http://map.amap.com/service/subway?_1469083453978&srhdata=1100_drw_beijing.json";
-    private static SubwayInfoParser instance = new SubwayInfoParser();
-    private static Logger logger = LoggerFactory.getLogger(SubwayInfoParser.class);
-    private static final String LINE_TAG = "line";
-    private static final String STATION_TAG = "station";
+/**
+ * @author licy03
+ */
+@Service
+@Order(2)
+@Slf4j
+public class AMapSubwayDataParser implements SubwayDataParser {
 
-    private Map<String, SubwayLine> lineName;
-    private Map<String, Station> stations;
-    private SubwayInfoParser(){
-    }
+    private final String url = "http://map.amap.com/service/subway?_1469083453978&srhdata=1100_drw_beijing.json";
 
-    public static SubwayInfoParser getInstace() {
-        return instance;
-    }
-
-    public void parse() throws IOException {
-        //直接从本地mapdb中获取数据
-        DB store = DBMaker.fileDB("file.db").make();
-        MapDBTool mapdb = new MapDBTool(store);
-
-        lineName = mapdb.load(LINE_TAG);
-        stations = mapdb.load(STATION_TAG);
-
-        logger.info("load from mapdb " + lineName.size() + " " + stations.size());
-
-        if (MapUtils.isEmpty(lineName) || MapUtils.isEmpty(stations)) {
-            logger.info("init data from web");
-            //解析网页数据，并存储到mapdb
-            loadFromUrl();
-            mapdb.save(LINE_TAG, lineName);
-            mapdb.save(STATION_TAG, stations);
-        }
-
-        store.close();
-    }
-
-    private void loadFromUrl() throws IOException {
+    @Override
+    public SubwayDataCollector parse() throws IOException {
+        Map<String, SubwayLine> lineName = new HashMap<>();
+        Map<String, Station> stations = new HashMap<>();
         String result = HttpUtil.httpGet(url);
-        logger.debug("http info " + result);
+        log.debug("http info " + result);
         Map<String, Object> json = (Map<String, Object>) JSON.parse(result);
 
         JSONArray lines = (JSONArray) json.get("l");
         Iterator iterator = lines.iterator();
         while (iterator.hasNext()) {
             Map<String, Object> line = (Map<String, Object>) iterator.next();
-            logger.debug("handle subwayline " + line);
+            log.debug("handle subwayline " + line);
             SubwayLine subwayLine = new SubwayLine();
             subwayLine.setId(line.get("ls").toString());
             subwayLine.setName(line.get("ln").toString());
@@ -73,17 +55,18 @@ public class SubwayInfoParser {
             lineName.put(line.get("ls").toString(), subwayLine);
 
             JSONArray lineStations = (JSONArray) line.get("st");
-            parseStation(lineStations, subwayLine.isCircle());
+            parseStation(lineStations, subwayLine.isCircle(), stations);
         }
+        return new SubwayDataCollector(lineName, stations);
     }
 
-    private void parseStation(JSONArray lineStations, boolean isCircleLine) {
+    private void parseStation(JSONArray lineStations, boolean isCircleLine, Map<String, Station> stations) {
         Iterator iterator = lineStations.iterator();
         Station head = null;
         Station previous = null;
         while (iterator.hasNext()) {
             Map<String, String> station = (Map<String, String>) iterator.next();
-            logger.info("handle station " + station);
+            log.info("handle station " + station);
             Station station1 = stations.get(station.get("poiid"));
 
             if (station1 == null) {
@@ -115,13 +98,5 @@ public class SubwayInfoParser {
             previous.addStation(head.getId());
             head.addStation(previous.getId());
         }
-    }
-
-    public Map<String, SubwayLine> getLineName() {
-        return lineName;
-    }
-
-    public Map<String, Station> getStations() {
-        return stations;
     }
 }
