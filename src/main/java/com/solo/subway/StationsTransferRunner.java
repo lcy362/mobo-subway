@@ -1,7 +1,8 @@
 package com.solo.subway;
 
 import com.solo.subway.data.SubwayDataCollector;
-import com.solo.subway.path.Dijkstra;
+import com.solo.subway.router.DijkstraRouter;
+import com.solo.subway.router.StationRouter;
 import com.solo.subway.service.spi.SubwayDataService;
 import com.solo.subway.util.PathInfo;
 import com.solo.subway.data.Station;
@@ -20,6 +21,9 @@ public class StationsTransferRunner implements CommandLineRunner {
     @Autowired
     private SubwayDataService subwayDataService;
 
+    @Autowired
+    private StationRouter router;
+
     @Override
     public void run(String... args) throws Exception {
         SubwayDataCollector subway = subwayDataService.getSubwayData();
@@ -36,8 +40,8 @@ public class StationsTransferRunner implements CommandLineRunner {
             }
         }
 
-        Map<String, PathInfo> aolin = Dijkstra.pathToAll("阜通", stations);
-        Map<String, PathInfo> tian = Dijkstra.pathToAll("天安门东", stations);
+        Map<String, PathInfo> aolin = router.pathToAll("阜通", stations);
+        Map<String, PathInfo> tian = router.pathToAll("天安门东", stations);
         for (Station station : stations.values()) {
             PathInfo aolinPath = aolin.get(station.getId());
             PathInfo tianPath = tian.get(station.getId());

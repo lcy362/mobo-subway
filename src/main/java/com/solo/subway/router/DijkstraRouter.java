@@ -1,17 +1,22 @@
-package com.solo.subway.path;
+package com.solo.subway.router;
 
 import com.solo.subway.util.PathInfo;
 import com.solo.subway.data.Station;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-public class Dijkstra {
-    static Logger logger = LoggerFactory.getLogger(Dijkstra.class);
+@Service
+@Slf4j
+public class DijkstraRouter implements StationRouter{
     private static final int MAX = 20000;
-    public static Map<String, PathInfo> pathToAll(String originName, Map<String, Station> stations) {
+
+    @Override
+    public Map<String, PathInfo> pathToAll(String originName, Map<String, Station> stations) {
         String originId = null;
         Map<String, PathInfo> knownPath = new HashMap<>();
         Map<String, PathInfo> waitingPath = new HashMap<>();
@@ -29,7 +34,7 @@ public class Dijkstra {
                 waitingPath.put(station.getId(), path);
             }
         }
-        logger.info("origin id: " + originId);
+        log.info("origin id: " + originId);
 
         PathInfo now = knownPath.get(originId);
         while (now != null) {
@@ -44,7 +49,7 @@ public class Dijkstra {
                 //更新相邻站点的最短距离
                 if (nextPath.getLength() > nextLength) {
                     nextPath.setLength(nextLength);
-                    logger.info("set " + stations.get(nextId).getName() + " distance to " + nextLength);
+                    log.info("set " + stations.get(nextId).getName() + " distance to " + nextLength);
                     nextPath.setDetail(new ArrayList<>(now.getDetail()));
                     nextPath.addNodeToPath(nextId);
                 }
@@ -63,7 +68,7 @@ public class Dijkstra {
             if (now != null) {
                 waitingPath.remove(now.getStationId());
                 knownPath.put(now.getStationId(), now);
-                logger.info(stations.get(now.getStationId()).getName() + " distance is " + now.getLength());
+                log.info(stations.get(now.getStationId()).getName() + " distance is " + now.getLength());
             }
 
         }
@@ -85,7 +90,7 @@ public class Dijkstra {
                 }
             }
             pathInfo.setTransferNum(transfer);
-            logger.info(originName + " to " + stations.get(pathInfo.getStationId()).getName()
+            log.info(originName + " to " + stations.get(pathInfo.getStationId()).getName()
              + " transfer " + transfer);
         }
 

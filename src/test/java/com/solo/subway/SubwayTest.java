@@ -1,16 +1,9 @@
 package com.solo.subway;
 
-import com.solo.subway.data.SubwayDataCollector;
-import com.solo.subway.path.Dijkstra;
-import com.solo.subway.util.PathInfo;
 import com.solo.subway.data.Station;
-import com.solo.subway.data.SubwayLine;
 import org.junit.Test;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class SubwayTest {
     @Test
