@@ -33,14 +33,14 @@ public class MapDbSubwayDataParser implements SubwayDataParser {
     @Override
     public SubwayDataCollector parse() throws IOException {
         //直接从本地mapdb中获取数据
-        DB store = DBMaker.fileDB("file.db").make();
-        MapDBTool mapdb = new MapDBTool(store);
+
+        MapDBTool mapdb = new MapDBTool();
 
         Map<String, SubwayLine> lineName = mapdb.load(LINE_TAG);
         Map<String, Station> stations = mapdb.load(STATION_TAG);
 
         log.info("load from mapdb " + lineName.size() + " " + stations.size());
-        store.close();
+        mapdb.close();
         return new SubwayDataCollector(lineName, stations);
     }
 }

@@ -10,12 +10,8 @@ import com.solo.subway.data.SubwayDataCollector;
 import com.solo.subway.parser.SubwayDataParser;
 import com.solo.subway.service.spi.SubwayDataService;
 import com.solo.subway.store.MapDBTool;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,8 +55,7 @@ public class SubwayDataServiceImpl implements SubwayDataService {
         if (!data.isValid()) {
             return;
         }
-        DB store = DBMaker.fileDB("file.db").make();
-        MapDBTool mapdb = new MapDBTool(store);
+        MapDBTool mapdb = new MapDBTool();
         if (MapUtils.isNotEmpty(data.getLineName())) {
             mapdb.save(LINE_TAG, data.getLineName());
             log.info("save lines");
@@ -69,6 +64,6 @@ public class SubwayDataServiceImpl implements SubwayDataService {
             mapdb.save(STATION_TAG, data.getStations());
             log.info("save stations");
         }
-        store.close();
+        mapdb.close();
     }
 }

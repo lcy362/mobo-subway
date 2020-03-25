@@ -9,9 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapDBTool {
+
     DB store;
-    public MapDBTool(DB store) {
-        this.store = store;
+    public MapDBTool() {
+        store = DBMaker.fileDB("file.db").make();
     }
 
     public <T> void save(String name, Map<String, T> data) {
@@ -29,6 +30,10 @@ public class MapDBTool {
         result.putAll(savedData);
         return result;
 
+    }
+
+    public void close() {
+        store.close();
     }
 
 }
