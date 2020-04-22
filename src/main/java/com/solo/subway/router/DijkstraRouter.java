@@ -23,31 +23,26 @@ public class DijkstraRouter extends AbstractRouter{
         while (now != null) {
             //从起点开始处理
             Station currentStation = stations.get(now.getStationId());
-            int nextLength = now.getLength() + 1;
-            for (String nextId : currentStation.getNextStations()) {
-                if (knownPath.containsKey(nextId)) {
-                    continue;
-                }
-                PathInfo nextPath = waitingPath.get(nextId);
-                //更新相邻站点的最短距离
-                if (nextPath.getLength() > nextLength) {
-                    nextPath.setLength(nextLength);
-                    log.info("set " + stations.get(nextId).getName() + " distance to " + nextLength);
-                    nextPath.setDetail(new ArrayList<>(now.getDetail()));
-                    nextPath.addNodeToPath(nextId);
-                }
-            }
-            now = null;
+            final int nextLength = now.getLength() + 1;
+
+            final PathInfo nowPath = now;
+            currentStation.getNextStations().stream()
+                    .filter(nextId -> !knownPath.containsKey(nextId))
+                    .map(waitingPath::get)
+                    .filter(nextPath -> nextPath.getLength() > nextLength)
+                    .forEach(nextPath -> {
+                        nextPath.setLength(nextLength);
+                        log.info("set " + stations.get(nextPath.getStationId()).getName() + " distance to " + nextLength);
+                        nextPath.setDetail(new ArrayList<>(nowPath.getDetail()));
+                        nextPath.addNodeToPath(nextPath.getStationId());
+                    });
+
+
             //选出离当前站点距离最小的站，作为下一个要处理的站点
-            for (PathInfo pathInfo : waitingPath.values()) {
-                if (now == null) {
-                    now = pathInfo;
-                } else {
-                    if (pathInfo.getLength() < now.getLength()) {
-                        now = pathInfo;
-                    }
-                }
-            }
+            now = waitingPath.values().stream()
+                    .min(Comparator.comparingInt(PathInfo::getLength))
+                    .orElse(null);
+
             if (now != null) {
                 waitingPath.remove(now.getStationId());
                 knownPath.put(now.getStationId(), now);
