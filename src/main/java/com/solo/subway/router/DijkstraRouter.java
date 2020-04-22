@@ -4,11 +4,11 @@ import com.solo.subway.util.PathInfo;
 import com.solo.subway.data.Station;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.solo.subway.util.StationsUtils.transferred;
 
 @Service
 @Slf4j
@@ -85,7 +85,7 @@ public class DijkstraRouter implements StationRouter{
             for (int i = 1; i < detail.size() - 1; i++) {
                 Station pre = stations.get(detail.get(i - 1));
                 Station next = stations.get(detail.get(i + 1));
-                if (transferd(stations.get(detail.get(i)).getLines(), pre.getLines(), next.getLines())) {
+                if (transferred(stations.get(detail.get(i)).getLines(), pre.getLines(), next.getLines())) {
                     transfer++;
                 }
             }
@@ -96,20 +96,5 @@ public class DijkstraRouter implements StationRouter{
 
         return knownPath;
 
-    }
-
-    /**
-     * 输入两个站点的所在线路，判断是否换乘过
-     */
-    private static boolean transferd(Set<String> currentLine, Set<String> previous, Set<String> next) {
-        Set<String> union = new HashSet<>();
-        union.addAll(previous);
-        union.addAll(next);
-        if (union.size() == previous.size() + next.size()) {
-            return true;
-        }
-        Collection<String> intersection = CollectionUtils.intersection(previous, next);
-        boolean result = !(CollectionUtils.containsAny(currentLine, intersection));
-        return result;
     }
 }
