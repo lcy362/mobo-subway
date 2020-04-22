@@ -1,9 +1,8 @@
 package com.solo.subway.router;
 
-import com.solo.subway.util.PathInfo;
+import com.solo.subway.data.PathInfo;
 import com.solo.subway.data.Station;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,29 +11,13 @@ import static com.solo.subway.util.StationsUtils.transferred;
 
 @Service
 @Slf4j
-public class DijkstraRouter implements StationRouter{
-    private static final int MAX = 20000;
+public class DijkstraRouter extends AbstractRouter{
 
     @Override
     public Map<String, PathInfo> pathToAll(String originName, Map<String, Station> stations) {
-        String originId = null;
-        Map<String, PathInfo> knownPath = new HashMap<>();
-        Map<String, PathInfo> waitingPath = new HashMap<>();
-        for (Station station : stations.values()) {
-            PathInfo path = new PathInfo();
-            if (station.getName().equals(originName)) {
-                originId = station.getId();
-                path.setLength(0);
-                path.setStationId(originId);
-                path.addNodeToPath(originId);
-                knownPath.put(originId, path);
-            } else {
-                path.setLength(MAX);
-                path.setStationId(station.getId());
-                waitingPath.put(station.getId(), path);
-            }
-        }
-        log.info("origin id: " + originId);
+        Map<String, PathInfo> knownPath = initKnownPath(stations.values(), originName);
+        Map<String, PathInfo> waitingPath = initWaitingPath(stations.values(), originName);
+        String originId = getOriginId(stations.values(), originName);
 
         PathInfo now = knownPath.get(originId);
         while (now != null) {
@@ -75,7 +58,7 @@ public class DijkstraRouter implements StationRouter{
 
         //一次计算换乘信息
         for (PathInfo pathInfo : knownPath.values()) {
-            if (pathInfo.getLength() >= MAX) {
+            if (!pathInfo.accessible()) {
                 pathInfo.setTransferNum(-1);
                 continue;
             }

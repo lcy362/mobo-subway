@@ -7,12 +7,12 @@
 package com.solo.subway.router;
 
 import com.solo.subway.data.Station;
-import com.solo.subway.util.PathInfo;
+import com.solo.subway.data.PathInfo;
 
 import java.util.Map;
 
 /**
- * @author licy03
+ * @author lcy362
  */
 public interface StationRouter {
 

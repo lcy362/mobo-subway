@@ -1,10 +1,9 @@
 package com.solo.subway;
 
 import com.solo.subway.data.SubwayDataCollector;
-import com.solo.subway.router.DijkstraRouter;
 import com.solo.subway.router.StationRouter;
 import com.solo.subway.service.spi.SubwayDataService;
-import com.solo.subway.util.PathInfo;
+import com.solo.subway.data.PathInfo;
 import com.solo.subway.data.Station;
 import com.solo.subway.data.SubwayLine;
 import lombok.extern.slf4j.Slf4j;

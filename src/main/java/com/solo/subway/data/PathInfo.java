@@ -1,4 +1,4 @@
-package com.solo.subway.util;
+package com.solo.subway.data;
 
 import lombok.Data;
 
@@ -11,9 +11,11 @@ import java.util.List;
  */
 public class PathInfo {
 
+    private static final int MAX = 20000;
+
     private String stationId;
 
-    private int length;
+    private int length = MAX;
 
     private int transferNum; //换乘数
 
@@ -21,5 +23,9 @@ public class PathInfo {
 
     public void addNodeToPath(String id) {
         detail.add(id);
+    }
+
+    public boolean accessible() {
+        return length < MAX;
     }
 }
