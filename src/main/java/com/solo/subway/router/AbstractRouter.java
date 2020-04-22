@@ -11,8 +11,11 @@ import com.solo.subway.data.PathInfo;
 import com.solo.subway.factory.PathInfoFactory;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.solo.subway.util.StationsUtils.transferred;
 
 /**
  * @author lcy362
@@ -37,5 +40,26 @@ public abstract class AbstractRouter implements StationRouter{
     protected String getOriginId(Collection<Station> stations, String originName) {
         return stations.stream().filter(station -> station.getName().equals(originName))
                 .map(Station::getId).findAny().orElseThrow(IllegalArgumentException::new);
+    }
+
+    protected void setTransferNums(Map<String, PathInfo> knownPath, Map<String, Station> stations) {
+        //一次计算换乘信息
+        knownPath.values().stream()
+                .filter(PathInfo::accessible)
+                .forEach(pathInfo -> pathInfo.setTransferNum(getTransferNumOfPath(pathInfo, stations)));
+    }
+
+    private int getTransferNumOfPath(PathInfo pathInfo, Map<String, Station> stations) {
+        int transfer = 0;
+        List<String> detail = pathInfo.getDetail();
+
+        for (int i = 1; i < detail.size() - 1; i++) {
+            Station pre = stations.get(detail.get(i - 1));
+            Station next = stations.get(detail.get(i + 1));
+            if (transferred(stations.get(detail.get(i)).getLines(), pre.getLines(), next.getLines())) {
+                transfer++;
+            }
+        }
+        return transfer;
     }
 }

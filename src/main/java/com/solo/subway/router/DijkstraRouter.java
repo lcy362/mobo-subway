@@ -51,26 +51,7 @@ public class DijkstraRouter extends AbstractRouter{
 
         }
 
-        //一次计算换乘信息
-        for (PathInfo pathInfo : knownPath.values()) {
-            if (!pathInfo.accessible()) {
-                pathInfo.setTransferNum(-1);
-                continue;
-            }
-            int transfer = 0;
-            List<String> detail = pathInfo.getDetail();
-
-            for (int i = 1; i < detail.size() - 1; i++) {
-                Station pre = stations.get(detail.get(i - 1));
-                Station next = stations.get(detail.get(i + 1));
-                if (transferred(stations.get(detail.get(i)).getLines(), pre.getLines(), next.getLines())) {
-                    transfer++;
-                }
-            }
-            pathInfo.setTransferNum(transfer);
-            log.info(originName + " to " + stations.get(pathInfo.getStationId()).getName()
-             + " transfer " + transfer);
-        }
+        setTransferNums(knownPath, stations);
 
         return knownPath;
 

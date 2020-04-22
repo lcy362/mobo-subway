@@ -17,7 +17,7 @@ public class PathInfo {
 
     private int length = MAX;
 
-    private int transferNum; //换乘数
+    private int transferNum = -1; //换乘数
 
     private List<String> detail = new ArrayList<>(); //详细路径
 
