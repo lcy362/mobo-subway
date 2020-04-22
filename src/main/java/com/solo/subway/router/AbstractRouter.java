@@ -23,26 +23,38 @@ import static com.solo.subway.util.StationsUtils.transferred;
 public abstract class AbstractRouter implements StationRouter{
 
     @Override
-    public abstract Map<String, PathInfo> pathToAll(String originName, Map<String, Station> stations);
+    public Map<String, PathInfo> pathToAll(String originName, Map<String, Station> stations) {
+        Map<String, PathInfo> knownPath = initKnownPath(stations.values(), originName);
+        Map<String, PathInfo> waitingPath = initWaitingPath(stations.values(), originName);
+        String originId = getOriginId(stations.values(), originName);
 
-    protected Map<String, PathInfo> initKnownPath(Collection<Station> stations, String originName) {
+        handleAllPath(knownPath, waitingPath, originId, stations);
+
+        setTransferNums(knownPath, stations);
+
+        return knownPath;
+    }
+
+    protected abstract void handleAllPath(Map<String, PathInfo> knownPath, Map<String, PathInfo> waitingPath, String originId, Map<String, Station> stations);
+
+    private Map<String, PathInfo> initKnownPath(Collection<Station> stations, String originName) {
         return stations.stream().filter(station -> station.getName().equals(originName))
                 .map(Station::getId)
                 .collect(Collectors.toMap(id -> id, PathInfoFactory::initKnownPath));
     }
 
-    protected Map<String, PathInfo> initWaitingPath(Collection<Station> stations, String originName) {
+    private Map<String, PathInfo> initWaitingPath(Collection<Station> stations, String originName) {
         return stations.stream().filter(station -> !station.getName().equals(originName))
                 .map(Station::getId)
                 .collect(Collectors.toMap(id -> id, PathInfoFactory::initWaitingPath));
     }
 
-    protected String getOriginId(Collection<Station> stations, String originName) {
+    private String getOriginId(Collection<Station> stations, String originName) {
         return stations.stream().filter(station -> station.getName().equals(originName))
                 .map(Station::getId).findAny().orElseThrow(IllegalArgumentException::new);
     }
 
-    protected void setTransferNums(Map<String, PathInfo> knownPath, Map<String, Station> stations) {
+    private void setTransferNums(Map<String, PathInfo> knownPath, Map<String, Station> stations) {
         //一次计算换乘信息
         knownPath.values().stream()
                 .filter(PathInfo::accessible)

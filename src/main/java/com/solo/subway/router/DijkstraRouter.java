@@ -14,11 +14,7 @@ import static com.solo.subway.util.StationsUtils.transferred;
 public class DijkstraRouter extends AbstractRouter{
 
     @Override
-    public Map<String, PathInfo> pathToAll(String originName, Map<String, Station> stations) {
-        Map<String, PathInfo> knownPath = initKnownPath(stations.values(), originName);
-        Map<String, PathInfo> waitingPath = initWaitingPath(stations.values(), originName);
-        String originId = getOriginId(stations.values(), originName);
-
+    protected void handleAllPath(Map<String, PathInfo> knownPath, Map<String, PathInfo> waitingPath, String originId, Map<String, Station> stations) {
         PathInfo now = knownPath.get(originId);
         while (now != null) {
             //从起点开始处理
@@ -50,10 +46,5 @@ public class DijkstraRouter extends AbstractRouter{
             }
 
         }
-
-        setTransferNums(knownPath, stations);
-
-        return knownPath;
-
     }
 }
