@@ -28,7 +28,7 @@ public class DijkstraRouter extends AbstractRouter{
                     .filter(nextPath -> nextPath.getLength() > nextLength)
                     .forEach(nextPath -> {
                         nextPath.setLength(nextLength);
-                        log.info("set " + stations.get(nextPath.getStationId()).getName() + " distance to " + nextLength);
+                        log.debug("set " + stations.get(nextPath.getStationId()).getName() + " distance to " + nextLength);
                         nextPath.setDetail(new ArrayList<>(nowPath.getDetail()));
                         nextPath.addNodeToPath(nextPath.getStationId());
                     });
@@ -42,7 +42,7 @@ public class DijkstraRouter extends AbstractRouter{
             if (now != null) {
                 waitingPath.remove(now.getStationId());
                 knownPath.put(now.getStationId(), now);
-                log.info(stations.get(now.getStationId()).getName() + " distance is " + now.getLength());
+                log.debug(stations.get(now.getStationId()).getName() + " distance is " + now.getLength());
             }
 
         }
