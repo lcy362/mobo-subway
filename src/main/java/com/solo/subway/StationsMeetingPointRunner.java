@@ -1,11 +1,10 @@
 package com.solo.subway;
 
+import com.solo.subway.data.PathInfo;
+import com.solo.subway.data.Station;
 import com.solo.subway.data.SubwayDataCollector;
 import com.solo.subway.router.StationRouter;
 import com.solo.subway.service.spi.SubwayDataService;
-import com.solo.subway.data.PathInfo;
-import com.solo.subway.data.Station;
-import com.solo.subway.data.SubwayLine;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
