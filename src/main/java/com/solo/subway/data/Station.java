@@ -15,7 +15,9 @@ public class Station implements Serializable{
 
     private Set<String> lines = new HashSet<String>(); //所在线路
 
-    private String position;
+    private double longitude;
+
+    private double latitude;
 
     private String pinyin;
 

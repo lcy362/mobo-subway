@@ -75,7 +75,9 @@ public class AMapSubwayDataParser implements SubwayDataParser {
             station1.setId(station.get("poiid"));
             station1.setName(station.get("n"));
             station1.setPinyin(station.get("sp"));
-            station1.setPosition(station.get("sl"));
+            String[] position = station.get("sl").split(",");
+            station1.setLongitude(Double.parseDouble(position[0]));
+            station1.setLatitude(Double.parseDouble(position[1]));
             String[] staionLines = station.get("r").split("\\|");
             for (String l : staionLines) {
                 station1.addLine(l);
