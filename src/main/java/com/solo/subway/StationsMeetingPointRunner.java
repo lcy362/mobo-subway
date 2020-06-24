@@ -33,6 +33,9 @@ public class StationsMeetingPointRunner implements CommandLineRunner {
     @Value("${stationDistances:7000,15000}")
     private List<Double> stationDistances;
 
+    @Value("${routeType:length}")
+    private String routeType;
+
     @Override
     public void run(String... args) throws Exception {
         if (stationNames.size() != stationLengths.size()) {
@@ -49,11 +52,14 @@ public class StationsMeetingPointRunner implements CommandLineRunner {
             for (int i = 0; i < stationNames.size(); i++) {
                 Map<String, PathInfo> pathInfoMap = pathInfos.get(i);
                 PathInfo pathInfo = pathInfoMap.get(station.getId());
-//                if (pathInfo.getLength() >= stationLengths.get(i)) {
-//                    matched = false;
-//                }
-                if (pathInfo.getDistance() >= stationDistances.get(i)) {
-                    matched = false;
+                if (routeType.equals("length")) {
+                    if (pathInfo.getLength() >= stationLengths.get(i)) {
+                        matched = false;
+                    }
+                } else if (routeType.equals("distance")) {
+                    if (pathInfo.getDistance() >= stationDistances.get(i)) {
+                        matched = false;
+                    }
                 }
             }
             if (matched) {
