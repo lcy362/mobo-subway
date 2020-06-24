@@ -25,12 +25,12 @@ Map<String, PathInfo> aolin = Dijkstra.pathToAll("奥林匹克公园", stations)
 输出距奥林匹克公园站15站以内，距天安门东站7站以内的地铁站列表，以及相应最短路线的站数和换乘数。
 
 ## Todo
-1. 站点距离数据
-
-2. 功能更强大的入口方法
+1. 功能更强大的入口方法
 
 ## ChangeLog
-### 2019.3.13 v1.0.1
+### 2020/6/24 v1.1.0
+增加按站点直线距离规划路径
+### 2020.3.13 v1.0.1
 增加springBoot支持
 ### 2018.3.23 v1.0.0
 初始版本发布
@@ -63,7 +63,9 @@ Map<String, PathInfo> aolin = Dijkstra.pathToAll("奥林匹克公园", stations)
 2. more powerful entrance method
 
 ## ChangeLog
-### 2019.3.13 v1.0.1
+### 2020/6/24 v1.1.0
+add router with direct distance
+### 2020.3.13 v1.0.1
 add springBoot support
 ### 2018.3.23 v1.0.0
 initial version
