@@ -83,8 +83,8 @@ public class AMapSubwayDataParser implements SubwayDataParser {
                 station1.addLine(l);
             }
             if (previous != null) {
-                previous.addStation(station1.getId());
-                station1.addStation(previous.getId());
+                previous.addNextStation(station1);
+                station1.addNextStation(previous);
             }
 
             stations.put(station1.getId(), station1);
@@ -97,8 +97,8 @@ public class AMapSubwayDataParser implements SubwayDataParser {
 
         }
         if (isCircleLine && head != null && previous != null) {
-            previous.addStation(head.getId());
-            head.addStation(previous.getId());
+            previous.addNextStation(head);
+            head.addNextStation(previous);
         }
     }
 }
