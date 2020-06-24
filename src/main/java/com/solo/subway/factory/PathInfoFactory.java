@@ -16,6 +16,7 @@ public class PathInfoFactory {
     public static PathInfo initKnownPath(String id) {
         PathInfo pathInfo = new PathInfo();
         pathInfo.setLength(0);
+        pathInfo.setDistance(0);
         pathInfo.setStationId(id);
         pathInfo.addNodeToPath(id);
         return pathInfo;

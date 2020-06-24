@@ -13,9 +13,13 @@ public class PathInfo {
 
     private static final int MAX = 20000;
 
+    private static final double MAX_DISTANCE = 5000000;
+
     private String stationId;
 
     private int length = MAX;
+
+    private double distance = MAX_DISTANCE;
 
     private int transferNum = -1; //换乘数
 

@@ -27,12 +27,15 @@ public class StationsMeetingPointRunner implements CommandLineRunner {
     @Value("${stationNames:天安门东,阜通}")
     private List<String> stationNames;
 
-    @Value("${stationDistances:7,15}")
-    private List<Integer> stationDistances;
+    @Value("${stationLengths:7,15}")
+    private List<Integer> stationLengths;
+
+    @Value("${stationDistances:7000,15000}")
+    private List<Double> stationDistances;
 
     @Override
     public void run(String... args) throws Exception {
-        if (stationNames.size() != stationDistances.size()) {
+        if (stationNames.size() != stationLengths.size()) {
             throw new IllegalArgumentException("stationNames和stationDistances的个数需要一致");
         }
         SubwayDataCollector subway = subwayDataService.getSubwayData();
@@ -46,7 +49,10 @@ public class StationsMeetingPointRunner implements CommandLineRunner {
             for (int i = 0; i < stationNames.size(); i++) {
                 Map<String, PathInfo> pathInfoMap = pathInfos.get(i);
                 PathInfo pathInfo = pathInfoMap.get(station.getId());
-                if (pathInfo.getLength() >= stationDistances.get(i)) {
+//                if (pathInfo.getLength() >= stationLengths.get(i)) {
+//                    matched = false;
+//                }
+                if (pathInfo.getDistance() >= stationDistances.get(i)) {
                     matched = false;
                 }
             }
