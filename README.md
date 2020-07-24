@@ -28,6 +28,8 @@ Map<String, PathInfo> aolin = Dijkstra.pathToAll("奥林匹克公园", stations)
 1. 功能更强大的入口方法
 
 ## ChangeLog
+### 2020/7/24 v1.1.1
+增加点对点寻路功能
 ### 2020/6/24 v1.1.0
 增加按站点直线距离规划路径
 ### 2020.3.13 v1.0.1
@@ -63,6 +65,8 @@ Map<String, PathInfo> aolin = Dijkstra.pathToAll("奥林匹克公园", stations)
 2. more powerful entrance method
 
 ## ChangeLog
+### 2020/7/24 v1.1.1
+add path runner
 ### 2020/6/24 v1.1.0
 add router with direct distance
 ### 2020.3.13 v1.0.1
