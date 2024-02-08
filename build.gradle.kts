@@ -27,6 +27,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("org.mapdb:mapdb:3.1.0")
+
 }
 
 tasks.withType<Test> {
