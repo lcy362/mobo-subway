@@ -24,7 +24,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
     implementation("com.alibaba:fastjson:2.0.46")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
