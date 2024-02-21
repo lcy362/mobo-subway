@@ -1,5 +1,6 @@
 package com.mobo.mobosubway.service;
 
+import com.mobo.mobosubway.data.SubwayDataCollection;
 import com.mobo.mobosubway.source.SubwaySourceQueryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,8 @@ public class AmapQueryServiceTest {
 
     @Test
     public void testParse() {
-        queryService.parse();
-        try {
-            Thread.sleep(1000 * 60);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        SubwayDataCollection subwayDataCollection = queryService.parse();
+        System.out.println(subwayDataCollection);
+
     }
 }

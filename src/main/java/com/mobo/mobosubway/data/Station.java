@@ -1,5 +1,6 @@
 package com.mobo.mobosubway.data;
 
+import com.mobo.mobosubway.util.GeoUtils;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -31,4 +32,14 @@ public class Station {
     private Set<String> nextStations = new HashSet<>();
 
     private Map<String, Double> nextStationDistance = new HashMap<>();
+
+    public void addLine(String line) {
+        lines.add(line);
+    }
+
+    public void addNextStation(Station station) {
+        nextStations.add(station.getId());
+        double distance = GeoUtils.getDistance(this.getLatitude(), this.getLongitude(), station.getLatitude(), station.getLongitude());
+        nextStationDistance.put(station.getId(), distance);
+    }
 }

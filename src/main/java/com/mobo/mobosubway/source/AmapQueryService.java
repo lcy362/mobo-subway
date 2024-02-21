@@ -3,7 +3,10 @@ package com.mobo.mobosubway.source;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.mobo.mobosubway.data.Station;
 import com.mobo.mobosubway.data.SubwayDataCollection;
+import com.mobo.mobosubway.data.SubwayLine;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,6 +17,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @Service
@@ -37,17 +42,79 @@ public class AmapQueryService implements SubwaySourceQueryService{
                 return null;
             }
             String resp = EntityUtils.toString(httpResponse.getEntity());
-            System.out.println(resp);
+            return parseResp(resp);
         } catch (IOException e) {
             return null;
         }
-        return null;
     }
 
     private SubwayDataCollection parseResp(String resp) {
         Map<String, Object> json = (Map<String, Object>) JSON.parse(resp);
-        System.out.println(json);
+        Map<String, SubwayLine> lineName = new HashMap<>();
+        Map<String, Station> stations = new HashMap<>();
+        JSONArray lines = (JSONArray) json.get("l");
+        Iterator iterator = lines.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> line = (Map<String, Object>) iterator.next();
+            log.debug("handle subwayline " + line);
+            SubwayLine subwayLine = new SubwayLine();
+            subwayLine.setId(line.get("ls").toString());
+            subwayLine.setName(line.get("ln").toString());
+            if (line.get("lo").equals("1")) {
+                subwayLine.setCircle(true);
+            } else {
+                subwayLine.setCircle(false);
+            }
+            lineName.put(line.get("ls").toString(), subwayLine);
+
+            JSONArray lineStations = (JSONArray) line.get("st");
+            parseStation(lineStations, subwayLine.isCircle(), stations);
+        }
         SubwayDataCollection subwayData = new SubwayDataCollection();
+        subwayData.setLines(lineName);
+        subwayData.setStations(stations);
         return subwayData;
+    }
+
+    private void parseStation(JSONArray lineStations, boolean isCircleLine, Map<String, Station> stations) {
+        Iterator iterator = lineStations.iterator();
+        Station head = null;
+        Station previous = null;
+        while (iterator.hasNext()) {
+            Map<String, String> station = (Map<String, String>) iterator.next();
+            log.info("handle station " + station);
+            Station station1 = stations.get(station.get("poiid"));
+
+            if (station1 == null) {
+                station1 = new Station();
+            }
+            station1.setId(station.get("poiid"));
+            station1.setName(station.get("n"));
+            station1.setPinyin(station.get("sp"));
+            String[] position = station.get("sl").split(",");
+            station1.setLongitude(Double.parseDouble(position[0]));
+            station1.setLatitude(Double.parseDouble(position[1]));
+            String[] staionLines = station.get("r").split("\\|");
+            for (String l : staionLines) {
+                station1.addLine(l);
+            }
+            if (previous != null) {
+                previous.addNextStation(station1);
+                station1.addNextStation(previous);
+            }
+
+            stations.put(station1.getId(), station1);
+
+            if (head == null) {
+                head = station1;
+            }
+
+            previous = station1;
+
+        }
+        if (isCircleLine && head != null && previous != null) {
+            previous.addNextStation(head);
+            head.addNextStation(previous);
+        }
     }
 }
