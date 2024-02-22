@@ -7,12 +7,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.mobo.mobosubway.data.Station;
 import com.mobo.mobosubway.data.SubwayDataCollection;
 import com.mobo.mobosubway.data.SubwayLine;
+import com.mobo.mobosubway.store.MapDBStore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ public class AmapQueryService implements SubwaySourceQueryService{
 
     private final String url = "http://map.amap.com/service/subway?_1469083453978&srhdata=1100_drw_beijing.json";
 
+    @Autowired
+    private MapDBStore mapdb;
     HttpClient httpClient = HttpClientBuilder.create().build();
 
     @Override

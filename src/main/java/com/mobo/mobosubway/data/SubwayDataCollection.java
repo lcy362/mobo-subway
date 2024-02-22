@@ -1,11 +1,13 @@
 package com.mobo.mobosubway.data;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.collections4.MapUtils;
 
 import java.util.Map;
 
 @Data
+@AllArgsConstructor
 public class SubwayDataCollection {
 
     private Map<String, SubwayLine> lines;
