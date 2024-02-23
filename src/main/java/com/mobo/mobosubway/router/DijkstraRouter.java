@@ -12,6 +12,7 @@ import java.util.Map;
 
 @Service("dijkstraRouter")
 @Slf4j
+@ConditionalOnProperty(name = "routeType", havingValue = "length", matchIfMissing = true)
 public class DijkstraRouter extends AbstractRouter implements StationRouter{
 
     @Override

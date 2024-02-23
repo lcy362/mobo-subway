@@ -3,6 +3,7 @@ package com.mobo.mobosubway.service.impl;
 import com.mobo.mobosubway.data.PathInfo;
 import com.mobo.mobosubway.data.Station;
 import com.mobo.mobosubway.router.StationRouter;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,16 +15,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class PathDebugService {
 
     private final StationRouter stationRouter;
 
     private final QueryDataService queryDataService;
-
-    public PathDebugService(@Qualifier("dijkstraDistanceRouter") StationRouter stationRouter, QueryDataService queryDataService) {
-        this.stationRouter = stationRouter;
-        this.queryDataService = queryDataService;
-    }
 
     public void printPathInfo(String station) {
         Map<String, Station> stations = queryDataService.querySource().getStations();

@@ -3,6 +3,7 @@ package com.mobo.mobosubway.router;
 import com.mobo.mobosubway.data.PathInfo;
 import com.mobo.mobosubway.data.Station;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Service("dijkstraDistanceRouter")
 @Slf4j
+@ConditionalOnProperty(name = "routeType", havingValue = "distance")
 public class DijkstraDistanceRouter extends AbstractRouter implements StationRouter{
 
     @Override
