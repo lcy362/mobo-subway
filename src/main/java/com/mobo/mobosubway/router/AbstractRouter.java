@@ -9,7 +9,7 @@ package com.mobo.mobosubway.router;
 import com.mobo.mobosubway.data.PathInfo;
 import com.mobo.mobosubway.data.Station;
 import com.mobo.mobosubway.data.SubwayDataCollection;
-import com.mobo.mobosubway.service.QueryDataService;
+import com.mobo.mobosubway.service.impl.QueryDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package com.mobo.mobosubway.service;
+package com.mobo.mobosubway.service.impl;
 
 import com.mobo.mobosubway.data.SubwayDataCollection;
 import com.mobo.mobosubway.source.SubwaySourceQueryService;
