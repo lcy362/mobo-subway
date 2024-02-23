@@ -9,6 +9,7 @@ import com.mobo.mobosubway.data.SubwayDataCollection;
 import com.mobo.mobosubway.data.SubwayLine;
 import com.mobo.mobosubway.store.MapDBStore;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -22,6 +23,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import static com.mobo.mobosubway.util.FoxSubwayConstants.LINE_TAG;
+import static com.mobo.mobosubway.util.FoxSubwayConstants.STATION_TAG;
 
 @Service
 @Order(2)
@@ -46,7 +50,16 @@ public class AmapQueryService implements SubwaySourceQueryService{
                 return null;
             }
             String resp = EntityUtils.toString(httpResponse.getEntity());
-            return parseResp(resp);
+            SubwayDataCollection data = parseResp(resp);
+            if (MapUtils.isNotEmpty(data.getLines())) {
+                mapdb.save(LINE_TAG, data.getLines());
+                log.info("save lines");
+            }
+            if (MapUtils.isNotEmpty(data.getStations())) {
+                mapdb.save(STATION_TAG, data.getStations());
+                log.info("save stations");
+            }
+            return data;
         } catch (IOException e) {
             return null;
         }
@@ -74,9 +87,7 @@ public class AmapQueryService implements SubwaySourceQueryService{
             JSONArray lineStations = (JSONArray) line.get("st");
             parseStation(lineStations, subwayLine.isCircle(), stations);
         }
-        SubwayDataCollection subwayData = new SubwayDataCollection();
-        subwayData.setLines(lineName);
-        subwayData.setStations(stations);
+        SubwayDataCollection subwayData = new SubwayDataCollection(lineName, stations);
         return subwayData;
     }
 

@@ -2,8 +2,10 @@ package com.mobo.mobosubway.data;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class SubwayLine {
+public class SubwayLine implements Serializable {
 
     private String id;
 

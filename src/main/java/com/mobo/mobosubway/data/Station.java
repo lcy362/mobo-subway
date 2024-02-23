@@ -3,13 +3,14 @@ package com.mobo.mobosubway.data;
 import com.mobo.mobosubway.util.GeoUtils;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 @Data
-public class Station {
+public class Station implements Serializable {
 
     private String id;
 

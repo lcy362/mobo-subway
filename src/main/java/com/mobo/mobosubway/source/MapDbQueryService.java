@@ -28,7 +28,6 @@ public class MapDbQueryService implements SubwaySourceQueryService{
         Map<String, Station> stations = mapdb.load(STATION_TAG);
 
         log.info("load from mapdb " + lineName.size() + " " + stations.size());
-        mapdb.close();
         return new SubwayDataCollection(lineName, stations);
     }
 
