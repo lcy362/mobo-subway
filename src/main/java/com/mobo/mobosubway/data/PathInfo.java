@@ -30,6 +30,6 @@ public class PathInfo {
     }
 
     public boolean accessible() {
-        return length < MAX;
+        return length < MAX || distance < MAX_DISTANCE;
     }
 }
