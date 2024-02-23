@@ -19,6 +19,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven(url = "https://maven.vaadin.com/vaadin-prereleases")
+    maven(url = "https://maven.vaadin.com/vaadin-addons")
+
 }
 
 dependencies {
@@ -31,8 +34,16 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.mapdb:mapdb:3.1.0")
+    implementation("com.vaadin:vaadin-spring-boot-starter")
 
 }
+
+dependencyManagement {
+    imports {
+        mavenBom("com.vaadin:vaadin-bom:24.3.5")
+    }
+}
+
 
 tasks.withType<Test> {
     useJUnitPlatform()
