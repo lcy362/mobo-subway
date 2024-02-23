@@ -2,10 +2,12 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.4"
+    id("com.vaadin") version "24.3.5"
 }
 
 group = "com.mobo"
 version = "2.0.0"
+val vaadinVersion = "24.3.5"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -40,7 +42,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom("com.vaadin:vaadin-bom:24.3.5")
+        mavenBom("com.vaadin:vaadin-bom:$vaadinVersion")
     }
 }
 
