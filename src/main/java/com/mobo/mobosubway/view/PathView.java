@@ -13,8 +13,8 @@ import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("subway")
-@PageTitle("mobo-subway")
+@Route(value = "path", layout = MainView.class)
+@PageTitle("路径规划")
 public class PathView extends VerticalLayout {
 
     @Autowired
