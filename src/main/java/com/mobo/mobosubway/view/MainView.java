@@ -40,7 +40,7 @@ public class MainView extends AppLayout {
         sideNav.addItem(
                 new SideNavItem("路径规划", "/path",
                         VaadinIcon.TRAIN.create()),
-                new SideNavItem("Orders", "/orders", VaadinIcon.CART.create()));
+                new SideNavItem("汇合点规划", "/meetingPoint", VaadinIcon.CART.create()));
         return sideNav;
     }
 
