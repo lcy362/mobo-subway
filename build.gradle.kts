@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.2.2"
+    id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.vaadin") version "24.3.5"
     jacoco
@@ -38,6 +38,8 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.mapdb:mapdb:3.1.0")
     implementation("com.vaadin:vaadin-spring-boot-starter")
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
 
 }
 
