@@ -38,9 +38,6 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.mapdb:mapdb:3.1.0")
     implementation("com.vaadin:vaadin-spring-boot-starter")
-    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
-    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
-
 }
 
 dependencyManagement {

@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +38,7 @@ public class PathServiceTest {
 
     @Test
     public void getPathTest() {
-        PowerMockito.mockStatic(HttpClientBuilder.class);
+        Mockito.mockStatic(HttpClientBuilder.class);
 
         PathInfoVO path = pathService.getPath("南礼士路", "阜通");
         System.out.println(path);
