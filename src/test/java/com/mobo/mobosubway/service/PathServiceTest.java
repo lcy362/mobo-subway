@@ -55,7 +55,8 @@ public class PathServiceTest {
     @Test
     public void meetingPointTest() {
         List<String> result = pathService.getAvailableMeetingPoint(Arrays.asList("天安门东", "古城"), Arrays.asList(7000d, 15000d));
-        System.out.println(result);
+        Assert.isTrue(result.contains("南礼士路"), "meeting point should contain 南礼士路");
+        Assert.isTrue(result.size() == 5, "there is 5 meeting points in this case");
     }
 
 }
