@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.mobo.mobosubway.data.Station;
 import com.mobo.mobosubway.data.SubwayDataCollection;
 import com.mobo.mobosubway.data.SubwayLine;
+import com.mobo.mobosubway.proxy.AmapProxy;
 import com.mobo.mobosubway.store.MapDBStore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
@@ -38,33 +39,23 @@ public class AmapQueryService implements SubwaySourceQueryService{
     private MapDBStore mapdb;
 
     @Autowired
-    HttpClient httpClient;
+    AmapProxy proxy;
 
     @Override
     public SubwayDataCollection parse() {
-        HttpGet httpGet = new HttpGet(url);
-        HttpResponse httpResponse= null;
-        try {
-            httpResponse = httpClient.execute(httpGet);
 
-            int status = httpResponse.getStatusLine().getStatusCode();
-            if (status != 200) {
-                return null;
-            }
-            String resp = EntityUtils.toString(httpResponse.getEntity());
-            SubwayDataCollection data = parseResp(resp);
-            if (MapUtils.isNotEmpty(data.getLines())) {
-                mapdb.save(LINE_TAG, data.getLines());
-                log.info("save lines");
-            }
-            if (MapUtils.isNotEmpty(data.getStations())) {
-                mapdb.save(STATION_TAG, data.getStations());
-                log.info("save stations");
-            }
-            return data;
-        } catch (IOException e) {
-            return null;
+        String resp = proxy.getResult();
+        SubwayDataCollection data = parseResp(resp);
+        if (MapUtils.isNotEmpty(data.getLines())) {
+            mapdb.save(LINE_TAG, data.getLines());
+            log.info("save lines");
         }
+        if (MapUtils.isNotEmpty(data.getStations())) {
+            mapdb.save(STATION_TAG, data.getStations());
+            log.info("save stations");
+        }
+        return data;
+
     }
 
     private SubwayDataCollection parseResp(String resp) {

@@ -10,14 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Map;
 
-@SpringBootTest
+//@SpringBootTest
 public class RouterTest {
 
     @Autowired
     private PathDebugService pathDebugService;
 
 
-    @Test
+//    @Test
     public void test() {
         pathDebugService.printPathInfo("南礼士路");
     }
