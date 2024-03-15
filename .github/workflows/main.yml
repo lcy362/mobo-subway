@@ -1,0 +1,34 @@
+name: Build and Run
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [11]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java-version }}
+        cache: gradle
+
+    - name: Set up Gradle 8.5
+      uses: gradle/wrapper-action@v1
+      with:
+        gradle-version: 8.5
+
+    - name: Build and Run
+      run: |
+        # 使用 gradle wrapper 运行 gradle bootRun 命令
+        ./gradlew bootRun
