@@ -36,7 +36,9 @@ public class AmapQueryService implements SubwaySourceQueryService{
 
     @Autowired
     private MapDBStore mapdb;
-    HttpClient httpClient = HttpClientBuilder.create().build();
+
+    @Autowired
+    HttpClient httpClient;
 
     @Override
     public SubwayDataCollection parse() {
