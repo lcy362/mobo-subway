@@ -30,17 +30,29 @@ public class Station implements Serializable {
     /**
      * 相邻站点
      */
-    private Set<String> nextStations = new HashSet<>();
+    @Deprecated
+    private Set<String> nextStationNames = new HashSet<>();
 
+    @Deprecated
     private Map<String, Double> nextStationDistance = new HashMap<>();
+
+    private Map<String, NextStationInfo> nextStations = new HashMap<>();
 
     public void addLine(String line) {
         lines.add(line);
     }
 
     public void addNextStation(Station station) {
-        nextStations.add(station.getId());
+        nextStationNames.add(station.getId());
         double distance = GeoUtils.getDistance(this.getLatitude(), this.getLongitude(), station.getLatitude(), station.getLongitude());
         nextStationDistance.put(station.getId(), distance);
+
+        NextStationInfo nextStationInfo = new NextStationInfo();
+        nextStationInfo.setId(station.getId());
+        nextStationInfo.setDistance(distance);
+        nextStationInfo.setName(station.getName());
+
+        nextStations.put(nextStationInfo.getId(), nextStationInfo);
     }
+
 }

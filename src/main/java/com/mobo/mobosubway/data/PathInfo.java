@@ -25,6 +25,8 @@ public class PathInfo {
 
     private List<String> detail = new ArrayList<>(); //详细路径
 
+    private List<String> pathLine = new ArrayList<>(); //途径线路
+
     public void addNodeToPath(String id) {
         detail.add(id);
     }

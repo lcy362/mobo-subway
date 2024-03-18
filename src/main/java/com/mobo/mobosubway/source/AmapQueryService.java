@@ -78,13 +78,13 @@ public class AmapQueryService implements SubwaySourceQueryService{
             lineName.put(line.get("ls").toString(), subwayLine);
 
             JSONArray lineStations = (JSONArray) line.get("st");
-            parseStation(lineStations, subwayLine.isCircle(), stations);
+            parseStation(lineStations, subwayLine.isCircle(), stations, subwayLine);
         }
         SubwayDataCollection subwayData = new SubwayDataCollection(lineName, stations);
         return subwayData;
     }
 
-    private void parseStation(JSONArray lineStations, boolean isCircleLine, Map<String, Station> stations) {
+    private void parseStation(JSONArray lineStations, boolean isCircleLine, Map<String, Station> stations, SubwayLine subwayLine) {
         Iterator iterator = lineStations.iterator();
         Station head = null;
         Station previous = null;
