@@ -27,6 +27,8 @@ public class PathInfo {
 
     private List<String> pathLine = new ArrayList<>(); //途径线路
 
+    private String currentLine; //中间状态，计算路线过程中，当前所在线路
+
     public void addNodeToPath(String id) {
         detail.add(id);
     }

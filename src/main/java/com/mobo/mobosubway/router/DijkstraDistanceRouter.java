@@ -1,5 +1,6 @@
 package com.mobo.mobosubway.router;
 
+import com.mobo.mobosubway.data.NextStationInfo;
 import com.mobo.mobosubway.data.PathInfo;
 import com.mobo.mobosubway.data.Station;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +24,12 @@ public class DijkstraDistanceRouter extends AbstractRouter implements StationRou
             Station currentStation = stations.get(now.getStationId());
 
             final PathInfo nowPath = now;
-            currentStation.getNextStationNames().stream()
+            currentStation.getNextStationIds().stream()
                     .filter(nextId -> !knownPath.containsKey(nextId))
                     .map(waitingPath::get)
-                    .filter(nextPath -> nextPath.getDistance() > nowPath.getDistance() + currentStation.getNextStationDistance().get(nextPath.getStationId()))
+                    .filter(nextPath -> nextPath.getDistance() > calculateNewDistance(nowPath, currentStation, nextPath))
                     .forEach(nextPath -> {
-                        nextPath.setDistance(nowPath.getDistance() + currentStation.getNextStationDistance().get(nextPath.getStationId()));
+                        nextPath.setDistance(calculateNewDistance(nowPath, currentStation, nextPath));
                         log.debug("set " + stations.get(nextPath.getStationId()).getName() + " distance to " + nextPath.getDistance());
                         nextPath.setDetail(new ArrayList<>(nowPath.getDetail()));
                         nextPath.addNodeToPath(nextPath.getStationId());
@@ -41,10 +42,16 @@ public class DijkstraDistanceRouter extends AbstractRouter implements StationRou
 
             if (now != null) {
                 waitingPath.remove(now.getStationId());
+                //对now
                 knownPath.put(now.getStationId(), now);
                 log.debug(stations.get(now.getStationId()).getName() + " distance is " + now.getLength());
             }
 
         }
+    }
+
+    private double calculateNewDistance(PathInfo nowPath, Station currentStation, PathInfo nextPath) {
+        NextStationInfo nextStationInfo = currentStation.getNextStations().get(nextPath.getStationId());
+        return nowPath.getDistance() + nextStationInfo.getDistance();
     }
 }

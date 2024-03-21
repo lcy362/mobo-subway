@@ -50,6 +50,8 @@ public class PathServiceTest {
         PathInfoVO path = pathService.getPath("南礼士路", "古城");
         Assert.isTrue(path.getDistance() > 0, "Distance should be greater than 0");
         Assert.isTrue(path.getTransferNum() == 0, "no transfer in this route");
+        PathInfoVO path2 = pathService.getPath("南礼士路", "雍和宫");
+        System.out.println(path2);
     }
 
     @Test

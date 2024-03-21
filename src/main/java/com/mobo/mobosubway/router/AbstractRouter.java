@@ -43,6 +43,13 @@ public abstract class AbstractRouter implements StationRouter{
         return knownPath;
     }
 
+    /**
+     *
+     * @param knownPath 已经确定到起始站最短距离的站点
+     * @param waitingPath
+     * @param originId 起始站
+     * @param stations 站点信息记录
+     */
     protected abstract void handleAllPath(Map<String, PathInfo> knownPath, Map<String, PathInfo> waitingPath, String originId, Map<String, Station> stations);
 
     private Map<String, PathInfo> initKnownPath(Collection<Station> stations, String originName) {

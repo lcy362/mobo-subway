@@ -31,7 +31,7 @@ public class Station implements Serializable {
      * 相邻站点
      */
     @Deprecated
-    private Set<String> nextStationNames = new HashSet<>();
+    private Set<String> nextStationIds = new HashSet<>();
 
     @Deprecated
     private Map<String, Double> nextStationDistance = new HashMap<>();
@@ -43,7 +43,7 @@ public class Station implements Serializable {
     }
 
     public void addNextStation(Station station) {
-        nextStationNames.add(station.getId());
+        nextStationIds.add(station.getId());
         double distance = GeoUtils.getDistance(this.getLatitude(), this.getLongitude(), station.getLatitude(), station.getLongitude());
         nextStationDistance.put(station.getId(), distance);
 
