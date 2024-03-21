@@ -24,7 +24,7 @@ public class DijkstraRouter extends AbstractRouter implements StationRouter{
             final int nextLength = now.getLength() + 1;
 
             final PathInfo nowPath = now;
-            currentStation.getNextStationIds().stream()
+            currentStation.getNextStations().keySet().stream()
                     .filter(nextId -> !knownPath.containsKey(nextId))
                     .map(waitingPath::get)
                     .filter(nextPath -> nextPath.getLength() > nextLength)
