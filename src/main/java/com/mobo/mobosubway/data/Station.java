@@ -27,15 +27,6 @@ public class Station implements Serializable {
 
     private String pinyin;
 
-    /**
-     * 相邻站点
-     */
-    @Deprecated
-    private Set<String> nextStationIds = new HashSet<>();
-
-    @Deprecated
-    private Map<String, Double> nextStationDistance = new HashMap<>();
-
     private Map<String, NextStationInfo> nextStations = new HashMap<>();
 
     public void addLine(String line) {
@@ -43,9 +34,7 @@ public class Station implements Serializable {
     }
 
     public void addNextStation(Station station) {
-        nextStationIds.add(station.getId());
         double distance = GeoUtils.getDistance(this.getLatitude(), this.getLongitude(), station.getLatitude(), station.getLongitude());
-        nextStationDistance.put(station.getId(), distance);
 
         NextStationInfo nextStationInfo = new NextStationInfo();
         nextStationInfo.setId(station.getId());

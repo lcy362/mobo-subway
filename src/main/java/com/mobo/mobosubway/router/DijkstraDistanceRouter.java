@@ -24,7 +24,7 @@ public class DijkstraDistanceRouter extends AbstractRouter implements StationRou
             Station currentStation = stations.get(now.getStationId());
 
             final PathInfo nowPath = now;
-            currentStation.getNextStationIds().stream()
+            currentStation.getNextStations().keySet().stream()
                     .filter(nextId -> !knownPath.containsKey(nextId))
                     .map(waitingPath::get)
                     .filter(nextPath -> nextPath.getDistance() > calculateNewDistance(nowPath, currentStation, nextPath))
