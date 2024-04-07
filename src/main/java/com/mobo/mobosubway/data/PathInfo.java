@@ -23,11 +23,16 @@ public class PathInfo {
 
     private int transferNum = -1; //换乘数
 
+    @Deprecated
     private List<String> detail = new ArrayList<>(); //详细路径
 
+    @Deprecated
     private List<String> pathLine = new ArrayList<>(); //途径线路
 
+    @Deprecated
     private String currentLine; //中间状态，计算路线过程中，当前所在线路
+
+    private List<PathNode> pathDetail = new ArrayList<>();
 
     public void addNodeToPath(String id) {
         detail.add(id);
