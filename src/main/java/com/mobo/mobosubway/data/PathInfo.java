@@ -38,6 +38,14 @@ public class PathInfo {
         detail.add(id);
     }
 
+    public void addNodeToPath(Station station) {
+        detail.add(station.getId());
+        PathNode pathNode = new PathNode();
+        pathNode.setStationName(station.getName());
+        pathNode.setStationId(station.getId());
+        pathDetail.add(pathNode);
+    }
+
     public boolean accessible() {
         return length < MAX || distance < MAX_DISTANCE;
     }
