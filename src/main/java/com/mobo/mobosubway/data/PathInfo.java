@@ -1,9 +1,14 @@
 package com.mobo.mobosubway.data;
 
 import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.SetUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 /**
@@ -29,7 +34,6 @@ public class PathInfo {
     @Deprecated
     private List<String> pathLine = new ArrayList<>(); //途径线路
 
-    @Deprecated
     private String currentLine; //中间状态，计算路线过程中，当前所在线路
 
     private List<PathNode> pathDetail = new ArrayList<>();
@@ -43,6 +47,20 @@ public class PathInfo {
         PathNode pathNode = new PathNode();
         pathNode.setStationName(station.getName());
         pathNode.setStationId(station.getId());
+        pathNode.setStationLines(new ArrayList<>(station.getLines()));
+
+        PathNode previous = pathDetail.get(0);
+
+        if (StringUtils.isBlank(currentLine)) {
+            //初始站逻辑，根据前两站所在线路确定初始线路
+            List<String> intersectionSet = ListUtils.intersection(previous.getStationLines(), pathNode.getStationLines());
+            if (CollectionUtils.isNotEmpty(intersectionSet)) {
+                currentLine = intersectionSet.get(0);
+            }
+        } else {
+
+        }
+
         pathDetail.add(pathNode);
     }
 

@@ -3,6 +3,7 @@ package com.mobo.mobosubway.data;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class PathNode {
@@ -11,7 +12,7 @@ public class PathNode {
 
     private String stationName;
 
-    private List<String> line;
+    private List<String> stationLines;
 
     private boolean transfer;
 
