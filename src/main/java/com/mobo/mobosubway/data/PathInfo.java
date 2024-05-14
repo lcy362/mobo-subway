@@ -31,13 +31,13 @@ public class PathInfo {
     @Deprecated
     private List<String> detail = new ArrayList<>(); //详细路径
 
-    @Deprecated
     private List<String> pathLine = new ArrayList<>(); //途径线路
 
     private String currentLine; //中间状态，计算路线过程中，当前所在线路
 
     private List<PathNode> pathDetail = new ArrayList<>();
 
+    @Deprecated
     public void addNodeToPath(String id) {
         detail.add(id);
     }
@@ -47,19 +47,20 @@ public class PathInfo {
         PathNode pathNode = new PathNode();
         pathNode.setStationName(station.getName());
         pathNode.setStationId(station.getId());
-        pathNode.setStationLines(new ArrayList<>(station.getLines()));
+        pathDetail.add(pathNode);
+    }
 
-        PathNode previous = pathDetail.get(0);
-
-        if (StringUtils.isBlank(currentLine)) {
-            //初始站逻辑，根据前两站所在线路确定初始线路
-            List<String> intersectionSet = ListUtils.intersection(previous.getStationLines(), pathNode.getStationLines());
-            if (CollectionUtils.isNotEmpty(intersectionSet)) {
-                currentLine = intersectionSet.get(0);
-            }
-        } else {
-
+    public void addNodeToPath(NextStationInfo station) {
+        detail.add(station.getId());
+        PathNode pathNode = new PathNode();
+        pathNode.setStationName(station.getName());
+        pathNode.setStationId(station.getId());
+        if (!StringUtils.equals(station.getLine(), currentLine)) {
+            transferNum++;
+            pathNode.setTransfer(true);
         }
+        currentLine = station.getLine();
+        pathLine.add(currentLine);
 
         pathDetail.add(pathNode);
     }

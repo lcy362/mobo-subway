@@ -107,8 +107,8 @@ public class AmapQueryService implements SubwaySourceQueryService{
                 station1.addLine(l);
             }
             if (previous != null) {
-                previous.addNextStation(station1);
-                station1.addNextStation(previous);
+                previous.addNextStation(station1, subwayLine.getName());
+                station1.addNextStation(previous, subwayLine.getName());
             }
 
             stations.put(station1.getId(), station1);
@@ -121,8 +121,8 @@ public class AmapQueryService implements SubwaySourceQueryService{
 
         }
         if (isCircleLine && head != null && previous != null) {
-            previous.addNextStation(head);
-            head.addNextStation(previous);
+            previous.addNextStation(head, subwayLine.getName());
+            head.addNextStation(previous, subwayLine.getName());
         }
     }
 }

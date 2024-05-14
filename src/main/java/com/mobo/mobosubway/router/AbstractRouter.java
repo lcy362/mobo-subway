@@ -54,14 +54,13 @@ public abstract class AbstractRouter implements StationRouter{
 
     private Map<String, PathInfo> initKnownPath(Collection<Station> stations, String originName) {
         return stations.stream().filter(station -> station.getName().equals(originName))
-                .map(Station::getId)
-                .collect(Collectors.toMap(id -> id, PathInfoFactory::initKnownPath));
+                .collect(Collectors.toMap(station -> station.getId(), PathInfoFactory::initKnownPath));
     }
 
     private Map<String, PathInfo> initWaitingPath(Collection<Station> stations, String originName) {
         return stations.stream().filter(station -> !station.getName().equals(originName))
-                .map(Station::getId)
-                .collect(Collectors.toMap(id -> id, PathInfoFactory::initWaitingPath));
+
+                .collect(Collectors.toMap(station -> station.getId(), PathInfoFactory::initWaitingPath));
     }
 
     private String getOriginId(Collection<Station> stations, String originName) {

@@ -12,8 +12,6 @@ public class PathNode {
 
     private String stationName;
 
-    private List<String> stationLines;
-
     private boolean transfer;
 
 }

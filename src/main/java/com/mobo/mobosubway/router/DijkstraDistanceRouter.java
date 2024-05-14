@@ -33,7 +33,7 @@ public class DijkstraDistanceRouter extends AbstractRouter implements StationRou
                         log.debug("set " + stations.get(nextPath.getStationId()).getName() + " distance to " + nextPath.getDistance());
                         nextPath.setDetail(new ArrayList<>(nowPath.getDetail()));
                         nextPath.setPathDetail(new ArrayList<>(nowPath.getPathDetail()));
-                        nextPath.addNodeToPath(stations.get(nextPath.getStationId()));
+                        nextPath.addNodeToPath(currentStation.getNextStations().get(nextPath.getStationId()));
                     });
 
             //选出离当前站点距离最小的站，作为下一个要处理的站点
