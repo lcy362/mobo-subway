@@ -26,7 +26,7 @@ public class PathInfo {
 
     private double distance = MAX_DISTANCE;
 
-    private int transferNum = -1; //换乘数
+    private int transferNum = 0; //换乘数
 
     @Deprecated
     private List<String> detail = new ArrayList<>(); //详细路径
@@ -55,12 +55,14 @@ public class PathInfo {
         PathNode pathNode = new PathNode();
         pathNode.setStationName(station.getName());
         pathNode.setStationId(station.getId());
-        if (!StringUtils.equals(station.getLine(), currentLine)) {
+        if (StringUtils.isNotBlank(currentLine) && !StringUtils.equals(station.getLine(), currentLine)) {
             transferNum++;
             pathNode.setTransfer(true);
         }
+        if (!StringUtils.equals(station.getLine(), currentLine)) {
+            pathLine.add(station.getLine());
+        }
         currentLine = station.getLine();
-        pathLine.add(currentLine);
 
         pathDetail.add(pathNode);
     }

@@ -32,7 +32,10 @@ public class DijkstraDistanceRouter extends AbstractRouter implements StationRou
                         nextPath.setDistance(calculateNewDistance(nowPath, currentStation, nextPath));
                         log.debug("set " + stations.get(nextPath.getStationId()).getName() + " distance to " + nextPath.getDistance());
                         nextPath.setDetail(new ArrayList<>(nowPath.getDetail()));
+                        nextPath.setPathLine(new ArrayList<>(nowPath.getPathLine()));
                         nextPath.setPathDetail(new ArrayList<>(nowPath.getPathDetail()));
+                        nextPath.setTransferNum(nowPath.getTransferNum());
+                        nextPath.setCurrentLine(nowPath.getCurrentLine());
                         nextPath.addNodeToPath(currentStation.getNextStations().get(nextPath.getStationId()));
                     });
 
