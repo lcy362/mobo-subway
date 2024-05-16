@@ -2,15 +2,19 @@ package com.mobo.mobosubway.store;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import lombok.extern.slf4j.Slf4j;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
+@Scope("singleton")
 public class MapDBStore {
 
     private DB store;
@@ -40,6 +44,7 @@ public class MapDBStore {
 
     @PreDestroy
     public void close() {
+        log.info("=======close mapdb==========");
         if (store != null && !store.isClosed()) {
             store.close();
         }

@@ -31,7 +31,7 @@ public class PathDebugService {
             String key = entry.getKey();
             String dest = stations.get(key).getName();
             List<String> pathDetail = entry.getValue().getDetail().stream().map(id -> stations.get(id).getName()).toList();
-            log.info("从{}到{}的路径为：{}", station, dest, pathDetail);
+//            log.info("从{}到{}的路径为：{}", station, dest, pathDetail);
         }
     }
 }
