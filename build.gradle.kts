@@ -51,6 +51,10 @@ jacoco {
     reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
 }
 
+vaadin {
+    productionMode = true
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
