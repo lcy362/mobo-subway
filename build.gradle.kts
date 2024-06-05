@@ -66,3 +66,7 @@ tasks.jacocoTestReport {
     dependsOn(tasks.test) // tests are required to run before generating the report
 }
 
+tasks.bootBuildImage {
+    imageName = "mobo-subway"
+}
+
